@@ -16,8 +16,14 @@ public class SwitcherController {
 	SwitcherService service;
 	
     @RequestMapping("/")	
-	public String index() {
+	public String index(ModelAndView modelAndView) {
 		
+    	 if(service.isServiceRunning()) {
+    		 System.out.println("THE SERVICE IS RUNNING");
+    		 modelAndView.addObject("isServiceRunning", "true");
+    	 }
+    	 
+    	
 		return "index";
 	}
 	

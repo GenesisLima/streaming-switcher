@@ -1,4 +1,4 @@
-package org.ntvru.streamingswitcher.customproperties;
+package org.ntvru.streamingswitcher.bean;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

@@ -1,6 +1,6 @@
 package org.ntvru.streamingswitcher;
 
-import org.ntvru.streamingswitcher.customproperties.Script;
+import org.ntvru.streamingswitcher.bean.Script;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

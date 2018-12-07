@@ -9,7 +9,7 @@
 .settings
 .springBeans
 .sts4-cache
-
+src/main/java/org/ntvru/streamingswitcher/command/*
 ### IntelliJ IDEA ###
 .idea
 *.iws

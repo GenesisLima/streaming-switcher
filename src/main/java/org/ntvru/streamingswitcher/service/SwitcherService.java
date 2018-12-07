@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import org.ntvru.streamingswitcher.customproperties.Script;
+import org.ntvru.streamingswitcher.bean.Script;
+import org.ntvru.streamingswitcher.command.Command;
+import org.ntvru.streamingswitcher.command.IsServiceActiveCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ public class SwitcherService {
 
 	//private ProcessBuilder builder = new ProcessBuilder(script.getPath()+"/"+script.getScript());
 	private ProcessBuilder builder;
+	private volatile boolean isServiceActive;
 //	private Thread thread;
 
 	
@@ -47,6 +50,7 @@ public class SwitcherService {
 	}
 	
 	public boolean stopStreaming() {
+		//TODO change this approach to something more organic
 		List<String> params = java.util.Arrays.asList("/usr/bin/pgrep","ffmpeg");
 		builder = new ProcessBuilder(params);		
 		Process process;
@@ -58,8 +62,7 @@ public class SwitcherService {
 			while ((line = lineReader.readLine ()) != null) {
 			   Runtime.getRuntime().exec("kill "+line);
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (IOException e) {		
 			e.printStackTrace();
 		}
 		
@@ -68,28 +71,45 @@ public class SwitcherService {
 	}
 	
 	public boolean testStreaming() {
-
+		
+		
 		return true;
 	}
-	//Old Implementation
-//	private class RunScript implements Runnable{
-//		private Process process;
-//
-//		@Override
-//		public void run() {
-//			String[] commands = {"/usr/local/bin/ffmpeg", "-f", "alsa", "-i", "default:CARD=CODEC", "-threads", "4", "-c:a", "libfdk_aac", "-b:a", "128k", "-aq", "0", "-ac",
-//					"2", "-q:a", "330", "-cutoff", "15000", "-vn", "-f", "mpegts", "http://127.0.0.1:80/stream"};			
-//			try {
-//				process = Runtime.getRuntime().exec(commands);
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}	
-//			BufferedReader lineReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//	        lineReader.lines().forEach(System.out::println);
-//			
-//		}
-//		
-//	}
+	
+
+
+	public boolean isServiceRunning() {
+		 final Boolean[] isActive = new Boolean[1];      
+	         isActive[0] = true;
+	  System.out.println("IS ACTIVE "+isActive[0]);
+	   Thread thread = new Thread(new Runnable() {
+		
+		@Override
+		public void run() {
+			List<String> params = java.util.Arrays.asList("/usr/bin/pgrep","ffmpeg");			
+			ProcessBuilder builder = new ProcessBuilder(params);
+			Process process;
+			try {
+				builder.redirectErrorStream(true);
+				process = builder.start();
+				BufferedReader lineReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+				String line = "";
+				while ((line = lineReader.readLine ()) != null) {
+				  if(line != null || !line.equals("")) {
+					  System.out.println("SERVICE "+line);
+					    isActive[0] = true;
+					    System.out.println("IS ACTIVE "+isActive);
+				  }
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+	});
+	   thread.start();	   
+      return isActive[0]; 
+	}
 
 }
