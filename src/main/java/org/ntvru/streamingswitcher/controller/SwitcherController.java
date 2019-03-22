@@ -1,7 +1,5 @@
 package org.ntvru.streamingswitcher.controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-
 import org.ntvru.streamingswitcher.service.SwitcherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,21 +14,19 @@ public class SwitcherController {
 	SwitcherService service;
 	
     @RequestMapping("/")	
-	public String index(ModelAndView modelAndView) {
-		
-    	 if(service.isServiceRunning()) {
-    		 System.out.println("THE SERVICE IS RUNNING");
-    		 modelAndView.addObject("isServiceRunning", "true");
-    	 }
-    	 
+	public ModelAndView index(ModelAndView modelAndView) {
     	
-		return "index";
+    	 modelAndView.addObject("isServiceRunning", service.isServiceRunning());   
+    	 
+    	 modelAndView.setViewName("index"); 
+    	
+		return modelAndView;
 	}
 	
 	@RequestMapping("/start")
 	public ModelAndView start(ModelAndView modelAndView) {		
 		
-          if(service.startStreaming()) {
+          if(service.startService()) {
 		modelAndView.addObject("message", "Streaming iniciado com sucesso.");
 		modelAndView.setViewName("redirect:/");
           }else {
@@ -45,11 +41,11 @@ public class SwitcherController {
 	@RequestMapping("/stop")
 	public ModelAndView stop(ModelAndView modelAndView) {
 		
-		   if(service.stopStreaming()) {
+		   if(service.stopService()) {
 				modelAndView.addObject("message", "Streaming interrompido com sucesso.");
 				modelAndView.setViewName("redirect:/");
 		          }else {
-		        	  modelAndView.addObject("message", "Ocorreu um problema ao interromper o streaming. Contate o administrador.");
+		        	 modelAndView.addObject("message", "Ocorreu um problema ao interromper o streaming. Contate o administrador.");
 		      		 modelAndView.setViewName("redirect:/");
 		          }
 		
@@ -57,17 +53,6 @@ public class SwitcherController {
 		return modelAndView;
 	}
 	
-	public ModelAndView test(ModelAndView modelAndView) {
-		
-		 if(service.testStreaming()) {
-				modelAndView.addObject("message", "Streaming testado com sucesso.");
-				modelAndView.setViewName("redirect:/");
-		          }else {
-		        	  modelAndView.addObject("message", "Ocorreu um problema ao testar o streaming. Contate o administrador.");
-		      		 modelAndView.setViewName("redirect:/");
-		          }
-		
-		return modelAndView;
-	}
+
 	 
 }

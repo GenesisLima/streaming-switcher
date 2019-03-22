@@ -1,12 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
 </head>
-<body>
-<a href="/start">Iniciar Streaming</a> <br>
-<a href="/stop">Parar Streaming</a> <br>
-<a href="/test">Testar Command Streaming</a>
+<body>    
+    <div > 
+       <a href="/stop" th:if="${isServiceRunning} == true">Parar Streaming</a> <br>
+       <a href="/start" th:if="${isServiceRunning} == false">Iniciar Streaming</a>
+</div>
+<!-- <a href="/start"  th:case="${isServiceRunning}" >Iniciar Streaming</a> <br> -->
+<!-- <a href="/stop">Parar Streaming</a> <br> -->
+<!-- <a href="/test">Testar Command Streaming</a> -->
+<h3 th:text="${isServiceRunning}" ></h3>
 </body>
 </html>

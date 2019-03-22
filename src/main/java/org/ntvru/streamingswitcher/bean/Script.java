@@ -5,8 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("ntvru.switcher")
 public class Script {
       
-	private String path = "/opt/script";
-	private String script = "";
+	//private String path = "/opt/script";
+	private String path;
+	private String script;
 
 	public String getScript() {
 		return script;
