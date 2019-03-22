@@ -59,9 +59,10 @@ public class TaskService {
 		//List<String> params = java.util.Arrays.asList("C:\\Windows\\System32\\tasklist.exe"," |", "find", " /i ","C:\\Windows\\System32\\notepad.exe");	
 		builder = new ProcessBuilder(params);		
 		Process process;
-		
-		if(isServiceRunning()) {			
-		synchronized(this) {			
+		 System.out.println("stop call on "+this.getClass().getName());
+		 System.out.println("service is running? "+isServiceRunning());
+		synchronized(this) {
+			if(isServiceRunning()) {
 		try {
 			builder.redirectErrorStream(true);
 			process = builder.start();

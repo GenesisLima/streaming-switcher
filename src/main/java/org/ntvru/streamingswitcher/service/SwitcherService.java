@@ -17,12 +17,12 @@ public class SwitcherService {
 	public boolean startService() {
 		
 		StartServiceTask task = new StartServiceTask(taskService);
-		if(!isServiceRunning()) {
+		//if(!isServiceRunning()) {
 			synchronized(this) {
 				Thread thread = new Thread(task,"startService");
 				thread.start();
 				}
-		}
+		//}
 	
 		return true;
 	}
@@ -38,15 +38,15 @@ public class SwitcherService {
 
 	public boolean stopService() throws InterruptedException {
 		 System.out.println("stop call on "+this.getClass().getName());
-		 System.out.println("service is running? "+isServiceRunning());
 		StopServiceTask task = new StopServiceTask(taskService);
-		if(isServiceRunning()) {
+		
 			synchronized(this) {
+				//if(isServiceRunning()) {
 				Thread thread = new Thread(task,"stopService");
 				thread.start();
 				if(thread.getState() == Thread.State.TERMINATED) {
 					thread.destroy();
-				}
+				//}
 				
 				
 				}
