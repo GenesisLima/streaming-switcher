@@ -19,6 +19,7 @@ public class StopServiceTask implements Runnable {
 	@Override
 	public void run() {
 	this.isRunning = this.taskService.stopService();
+	 System.out.println("stop call on "+this.getClass().getName());
 		
 	}
 }

@@ -37,11 +37,12 @@ public class SwitcherService {
 	}
 
 	public boolean stopService() {
+		 System.out.println("stop call on "+this.getClass().getName());
 		StopServiceTask task = new StopServiceTask(taskService);
-		if(!isServiceRunning()) {
+		if(isServiceRunning()) {
 			synchronized(this) {
 				Thread thread = new Thread(task,"startService");
-				thread.interrupt();
+				thread.stop();
 				
 				}
 		}

@@ -2,11 +2,9 @@ package org.ntvru.streamingswitcher.tasks;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.ntvru.streamingswitcher.bean.Script;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +68,9 @@ public class TaskService {
 			BufferedReader lineReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			String line = "";
 			System.out.printf("Output of running %s is:", Arrays.toString(params.toArray()));
+
+			System.out.println("LINE READER "+lineReader.readLine());
+
 			if ((line = lineReader.readLine ()) != null) {
 				  System.out.println("LINE ON STOP "+line);
 			     Runtime.getRuntime().exec("kill "+line);
@@ -110,7 +111,6 @@ public class TaskService {
 //					else
 //						this.isServiceActive = false;
 //					}
-					System.out.println("LINE READER "+lineReader.readLine());
 					if(lineReader.readLine() != null) {
 						System.out.println("LINE "+line);
 						 if(line != null || !line.equals(""))
