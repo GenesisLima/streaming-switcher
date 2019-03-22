@@ -42,7 +42,7 @@ public class SwitcherService {
 		if(isServiceRunning()) {
 			synchronized(this) {
 				Thread thread = new Thread(task,"startService");
-				thread.stop();
+				thread.start();
 				
 				}
 		}
