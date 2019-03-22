@@ -95,13 +95,12 @@ public class TaskService {
 		//	List<String> params = java.util.Arrays.asList("C:\\Windows\\System32\\tasklist.exe"," |", "find", " /i ","C:\\Windows\\System32\\notepad.exe");	
 		//List<String> params = java.util.Arrays.asList("tasklist | find /i notepad.exe");			
 			ProcessBuilder builder = new ProcessBuilder(params);
-			Process process;
-		
+			
 				
 				synchronized(this) {			
 				try {
 					builder.redirectErrorStream(true);
-					process = builder.start();
+					Process process = builder.start();
 					BufferedReader lineReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 					String line = "";
 //					while ((line = lineReader.readLine ()) != null) {
