@@ -36,13 +36,18 @@ public class SwitcherService {
 		return task.isRunning();
 	}
 
-	public boolean stopService() {
+	public boolean stopService() throws InterruptedException {
 		 System.out.println("stop call on "+this.getClass().getName());
+		 System.out.println("service is running? "+isServiceRunning());
 		StopServiceTask task = new StopServiceTask(taskService);
 		if(isServiceRunning()) {
 			synchronized(this) {
-				Thread thread = new Thread(task,"startService");
+				Thread thread = new Thread(task,"stopService");
 				thread.start();
+				if(thread.getState() == Thread.State.TERMINATED) {
+					thread.destroy();
+				}
+				
 				
 				}
 		}

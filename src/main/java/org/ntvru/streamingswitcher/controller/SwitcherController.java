@@ -39,7 +39,7 @@ public class SwitcherController {
 	}
 	
 	@RequestMapping("/stop")
-	public ModelAndView stop(ModelAndView modelAndView) {
+	public ModelAndView stop(ModelAndView modelAndView) throws InterruptedException {
 		        System.out.println("stop call on "+this.getClass().getName());
 		   if(service.stopService()) {
 				modelAndView.addObject("message", "Streaming interrompido com sucesso.");
