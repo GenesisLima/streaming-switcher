@@ -62,7 +62,7 @@ public class TaskService {
 		 System.out.println("stop call on "+this.getClass().getName());
 		 System.out.println("service is running? "+isServiceRunning());
 		synchronized(this) {
-			if(isServiceRunning()) {
+			//if(isServiceRunning()) {
 		try {
 			builder.redirectErrorStream(true);
 			process = builder.start();
@@ -72,19 +72,19 @@ public class TaskService {
 			System.out.printf("Output of running %s is:", Arrays.toString(params.toArray()));
 
 			System.out.println("LINE READER "+lineReader.readLine());
-			  killProcess(lineReader.readLine());
-//			while ((line = lineReader.readLine()) != null) {
+			 
+			if ((line = lineReader.readLine()) != null) {
 //				 System.out.println("LINE ON STOP "+line);
 //			    // Runtime.getRuntime().exec("kill "+line);
-//				 killProcess(line);
-//			     this.isServiceActive  = false;
-//			}
+				 killProcess(line);
+			     this.isServiceActive  = false;
+	}
 			} catch (IOException e) {
 				System.out.println("EXCEPTION "+e);
 				
 				e.printStackTrace();
 			}
-		}
+		//}
 			
 	}
 		return isServiceActive;
