@@ -70,10 +70,10 @@ public class TaskService {
 			BufferedReader lineReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			String line = "";
 			System.out.printf("Output of running %s is:", Arrays.toString(params.toArray()));
-
+			System.out.println();
 			System.out.println("LINE READER "+lineReader.readLine());
 			 
-			if ((line = lineReader.readLine()) != null) {
+			if (lineReader.readLine() != null) {
 //				 System.out.println("LINE ON STOP "+line);
 //			    // Runtime.getRuntime().exec("kill "+line);
 				 killProcess(line);
