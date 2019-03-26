@@ -61,7 +61,7 @@ public class TaskService {
 		Process process;
 		 System.out.println("stop call on "+this.getClass().getName());
 		 System.out.println("service is running? "+isServiceRunning());
-		synchronized(this) {
+		//synchronized(this) {
 			//if(isServiceRunning()) {
 		try {
 			builder.redirectErrorStream(true);
@@ -86,7 +86,7 @@ public class TaskService {
 			}
 		//}
 			
-	}
+	//}
 		return isServiceActive;
 	}
 	
@@ -101,7 +101,7 @@ public class TaskService {
 			ProcessBuilder builder = new ProcessBuilder(params);
 			
 				
-				synchronized(this) {			
+				//synchronized(this) {			
 				try {
 					builder.redirectErrorStream(true);
 					Process process = builder.start();
@@ -126,7 +126,7 @@ public class TaskService {
 						
 						e.printStackTrace();
 					}
-				}
+			//	}
 					
 		
 	   
