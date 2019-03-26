@@ -66,14 +66,15 @@ public class TaskService {
 		try {
 			builder.redirectErrorStream(true);
 			process = builder.start();
+			System.out.println("PROCESSO "+process.getInputStream());
 			BufferedReader lineReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			String line = "";
 			System.out.printf("Output of running %s is:", Arrays.toString(params.toArray()));
 
 			System.out.println("LINE READER "+lineReader.readLine());
 
-			if ((line = lineReader.readLine ()) != null) {
-				  System.out.println("LINE ON STOP "+line);
+			while ((line = lineReader.readLine()) != null) {
+				 System.out.println("LINE ON STOP "+line);
 			     Runtime.getRuntime().exec("kill "+line);
 			     this.isServiceActive  = false;
 			}
@@ -132,6 +133,38 @@ public class TaskService {
 
 	   return this.isServiceActive; 
 	}
+	
+	private void killProcess(String pid) {
+		List<String> params = java.util.Arrays.asList("/bin/kill",pid);
+		ProcessBuilder builder = new ProcessBuilder(params);
+		synchronized(this) {			
+		try {
+			builder.redirectErrorStream(true);
+			Process process = builder.start();
+			BufferedReader lineReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String line = "";
+//			while ((line = lineReader.readLine ()) != null) {
+//				System.out.println("LINE "+line);
+//			  if(line != null || !line.equals(""))
+//				this.isServiceActive = true;
+//			else
+//				this.isServiceActive = false;
+//			}
+			if(lineReader.readLine() != null) {
+				System.out.println("LINE "+line);
+				 if(line != null || !line.equals(""))
+				this.isServiceActive = true;
+			} else {
+				this.isServiceActive = false;
+			}
+			} catch (IOException e) {
+				System.out.println("EXCEPTION "+e);
+				
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	
 	
 }
