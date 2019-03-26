@@ -72,12 +72,13 @@ public class TaskService {
 			System.out.printf("Output of running %s is:", Arrays.toString(params.toArray()));
 
 			System.out.println("LINE READER "+lineReader.readLine());
-
-			while ((line = lineReader.readLine()) != null) {
-				 System.out.println("LINE ON STOP "+line);
-			     Runtime.getRuntime().exec("kill "+line);
-			     this.isServiceActive  = false;
-			}
+			  killProcess(lineReader.readLine());
+//			while ((line = lineReader.readLine()) != null) {
+//				 System.out.println("LINE ON STOP "+line);
+//			    // Runtime.getRuntime().exec("kill "+line);
+//				 killProcess(line);
+//			     this.isServiceActive  = false;
+//			}
 			} catch (IOException e) {
 				System.out.println("EXCEPTION "+e);
 				
@@ -135,7 +136,8 @@ public class TaskService {
 	}
 	
 	private void killProcess(String pid) {
-		List<String> params = java.util.Arrays.asList("/bin/kill",pid);
+		System.out.println("KILLING PROCESS "+pid);
+		List<String> params = java.util.Arrays.asList("/bin/kill","-9 ",pid);
 		ProcessBuilder builder = new ProcessBuilder(params);
 		synchronized(this) {			
 		try {
