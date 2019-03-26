@@ -3,12 +3,15 @@ package org.ntvru.streamingswitcher.tasks;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
 import org.ntvru.streamingswitcher.bean.Script;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+
+import ch.qos.logback.core.net.SyslogOutputStream;
 
 @Configuration
 public class TaskService {
@@ -27,26 +30,34 @@ public class TaskService {
 	
 	public boolean startService() {
 		List<String> params = java.util.Arrays.asList("ffmpeg","-f","alsa","-i","default:CARD=CODEC", "-threads", "4", "-c:a", "libfdk_aac","-b:a", "128k", "-aq", "0", "-ac", "2", "-q:a", "330", "-cutoff", "15000", "-vn", "-f", "mpegts",  "http://127.0.0.1:80/stream");
-		builder = new ProcessBuilder(params);
-		//List<String> params = java.util.Arrays.asList("notepad","test");
+		// List<String> params = java.util.Arrays.asList(script.getPath()+"/"+"./"+script.getScript());
 		//builder = new ProcessBuilder(params);
+		//List<String> params = java.util.Arrays.asList("notepad","test");
+		builder = new ProcessBuilder(params);
 		String nome = Thread.currentThread().getName();
 		if(!isServiceRunning()) {
 		synchronized(this) {			
 		try {
 				builder.redirectErrorStream(true);
 				Process process = builder.start();
+				System.out.println("PROCESS ID ON START "+getPidOfProcess(process));
 				BufferedReader lineReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 				String line = "";
 				while ((line = lineReader.readLine ()) != null) {
 				    System.out.println ("Stdout: " + line);
 				}
 				this.isServiceActive = true;
+//				Thread.sleep(30000);
+//				process.destroyForcibly();
 			} catch (IOException e) {
 				System.out.println("EXCEPTION "+e);
 				this.isServiceActive  = false;
 				e.printStackTrace();
-			}
+			} 
+//		catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		}
 		}
 	return this.isServiceActive;
@@ -67,18 +78,19 @@ public class TaskService {
 			builder.redirectErrorStream(true);
 			process = builder.start();
 			System.out.println("PROCESSO "+process.getInputStream());
+			//System.out.println("PROCESS ID ON STOP "+getPidOfProcess(process));
 			BufferedReader lineReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			String line = "";
-			System.out.printf("Output of running %s is:", Arrays.toString(params.toArray()));
-			System.out.println();
-			System.out.println("LINE READER "+lineReader.readLine());
+			System.out.println("Output of running is: "+Arrays.toString(params.toArray()));		
+			String pid = lineReader.readLine();
+			System.out.println("LINE READER "+pid);
 			 
-			if (lineReader.readLine() != null) {
-//				 System.out.println("LINE ON STOP "+line);
+			//if (lineReader.readLine() != null && !lineReader.readLine().equals("")) {
+				 System.out.println("LINE ON STOP "+line);
 //			    // Runtime.getRuntime().exec("kill "+line);
-				 killProcess(line);
+				 killProcess(pid);
 			     this.isServiceActive  = false;
-	}
+	//}
 			} catch (IOException e) {
 				System.out.println("EXCEPTION "+e);
 				
@@ -105,6 +117,7 @@ public class TaskService {
 				try {
 					builder.redirectErrorStream(true);
 					Process process = builder.start();
+					
 					BufferedReader lineReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 					String line = "";
 //					while ((line = lineReader.readLine ()) != null) {
@@ -137,12 +150,17 @@ public class TaskService {
 	
 	private void killProcess(String pid) {
 		System.out.println("KILLING PROCESS "+pid);
-		List<String> params = java.util.Arrays.asList("/bin/kill","-9 ",pid);
+		List<String> params = java.util.Arrays.asList("/bin/kill", "-9", pid);
 		ProcessBuilder builder = new ProcessBuilder(params);
-		synchronized(this) {			
+		System.out.println("Output of running is: "+Arrays.toString(params.toArray())+" on "+this.getClass().getName());
+		
+		//synchronized(this) {			
 		try {
+			System.out.println("Directory "+builder.directory());
 			builder.redirectErrorStream(true);
 			Process process = builder.start();
+			System.out.println("IS ALIVE "+process.isAlive());			
+			
 			BufferedReader lineReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			String line = "";
 //			while ((line = lineReader.readLine ()) != null) {
@@ -164,9 +182,24 @@ public class TaskService {
 				
 				e.printStackTrace();
 			}
-		}
+		//}
 	}
 	
 	
+	private synchronized long getPidOfProcess(Process p) {
+	    long pid = -1;
+
+	    try {
+	      if (p.getClass().getName().equals("java.lang.UNIXProcess")) {
+	        Field f = p.getClass().getDeclaredField("pid");
+	        f.setAccessible(true);
+	        pid = f.getLong(p);
+	        f.setAccessible(false);
+	      }
+	    } catch (Exception e) {
+	      pid = -1;
+	    }
+	    return pid;
+	  }
 	
 }
