@@ -66,14 +66,12 @@ public class TaskService {
 	public boolean stopService() {
 		//TODO change this approach to something more organic
 		List<String> params = java.util.Arrays.asList("/usr/bin/pgrep","ffmpeg");
-		//List<String> params = java.util.Arrays.asList("notepad","test");
-		//List<String> params = java.util.Arrays.asList("C:\\Windows\\System32\\tasklist.exe"," |", "find", " /i ","C:\\Windows\\System32\\notepad.exe");	
+		
 		builder = new ProcessBuilder(params);		
 		Process process;
 		 System.out.println("stop call on "+this.getClass().getName());
 		 System.out.println("service is running? "+isServiceRunning());
-		//synchronized(this) {
-			//if(isServiceRunning()) {
+	
 		try {
 			builder.redirectErrorStream(true);
 			process = builder.start();
@@ -90,15 +88,15 @@ public class TaskService {
 //			    // Runtime.getRuntime().exec("kill "+line);
 				 killProcess(pid);
 			     this.isServiceActive  = false;
-	//}
+	
 			} catch (IOException e) {
 				System.out.println("EXCEPTION "+e);
 				
 				e.printStackTrace();
 			}
-		//}
+		
 			
-	//}
+	
 		return isServiceActive;
 	}
 	
@@ -106,27 +104,20 @@ public class TaskService {
 
 
 	public boolean isServiceRunning() {		
-		//synchronized(this) {	
+		
 		List<String> params = java.util.Arrays.asList("/usr/bin/pgrep","ffmpeg");		
-		//	List<String> params = java.util.Arrays.asList("C:\\Windows\\System32\\tasklist.exe"," |", "find", " /i ","C:\\Windows\\System32\\notepad.exe");	
-		//List<String> params = java.util.Arrays.asList("tasklist | find /i notepad.exe");			
+		
 			ProcessBuilder builder = new ProcessBuilder(params);
 			
 				
-				//synchronized(this) {			
+					
 				try {
 					builder.redirectErrorStream(true);
 					Process process = builder.start();
 					
 					BufferedReader lineReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 					String line = "";
-//					while ((line = lineReader.readLine ()) != null) {
-//						System.out.println("LINE "+line);
-//					  if(line != null || !line.equals(""))
-//						this.isServiceActive = true;
-//					else
-//						this.isServiceActive = false;
-//					}
+
 					if(lineReader.readLine() != null) {
 						System.out.println("LINE "+line);
 						 if(line != null || !line.equals(""))
@@ -139,7 +130,7 @@ public class TaskService {
 						
 						e.printStackTrace();
 					}
-			//	}
+			
 					
 		
 	   
